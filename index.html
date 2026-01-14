@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Pichu Player 2.0</title>
+
+<style>
+:root {
+    --bg-main: #070c23;
+    --bg-sub: #1f3597;
+    --accent: #d29e71;
+    --black: #000000;
+    --white: #FFFFFF;
+    --text-sub: #cfd6ff;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: linear-gradient(160deg, var(--bg-main), #050814);
+    color: var(--white);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.player {
+    width: 920px;
+    max-width: 95%;
+    background: linear-gradient(180deg, var(--bg-main), #0b1238);
+    border-radius: 18px;
+    padding: 28px;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+}
+
+.title {
+    text-align: center;
+    font-size: 30px;
+    font-weight: 700;
+}
+
+.title span {
+    color: var(--accent);
+}
+
+.subtitle {
+    text-align: center;
+    font-size: 15px;
+    color: var(--text-sub);
+    margin-bottom: 26px;
+    letter-spacing: 1px;
+}
+
+/* Media */
+.video-wrapper {
+    display: none;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 2px solid rgba(31,53,151,0.6);
+    margin-bottom: 18px;
+}
+
+video {
+    width: 100%;
+    background: var(--black);
+}
+
+.audio-wrapper {
+    display: none;
+    margin-bottom: 18px;
+}
+
+audio {
+    width: 100%;
+}
+
+/* Utility Panel */
+.utility {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.panel {
+    background: linear-gradient(160deg, #0b1340, var(--bg-main));
+    border: 1px solid rgba(31,53,151,0.4);
+    border-radius: 14px;
+    padding: 16px;
+}
+
+/* Now Playing */
+.now-playing h3 {
+    margin: 0 0 8px;
+    font-size: 15px;
+    color: var(--accent);
+}
+
+.track-name {
+    font-size: 14px;
+    margin-bottom: 6px;
+    word-break: break-all;
+}
+
+.track-time {
+    font-size: 13px;
+    color: var(--text-sub);
+}
+
+/* Speed */
+.speed h3 {
+    margin: 0 0 10px;
+    font-size: 15px;
+    color: var(--accent);
+}
+
+.speed-buttons button {
+    margin: 4px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: none;
+    background: var(--bg-sub);
+    color: var(--white);
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.speed-buttons button.active {
+    background: var(--accent);
+    color: var(--black);
+}
+
+/* Playlist */
+.playlist {
+    grid-column: 1 / -1;
+}
+
+.playlist h3 {
+    margin: 0 0 10px;
+    font-size: 15px;
+    color: var(--accent);
+}
+
+.playlist ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 160px;
+    overflow-y: auto;
+}
+
+.playlist li {
+    padding: 8px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--white);
+}
+
+.playlist li:hover {
+    background: rgba(255,255,255,0.08);
+}
+
+.playlist li.active {
+    background: var(--accent);
+    color: var(--black);
+    font-weight: 600;
+}
+
+/* Controls */
+.controls {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.file-input input {
+    display: none;
+}
+
+.file-input label {
+    background: linear-gradient(135deg, var(--bg-sub), #2948d4);
+    padding: 12px 22px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--white);
+}
+
+.hint {
+    font-size: 13px;
+    color: var(--text-sub);
+}
+
+.footer {
+    margin-top: 22px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-sub);
+}
+
+.footer span {
+    color: var(--accent);
+    font-weight: 600;
+}
+</style>
+</head>
+<body>
+
+<div class="player">
+
+    <div class="title">Pichu Player <span>2.0</span></div>
+    <div class="subtitle">Fast. Fantastic</div>
+
+    <div class="video-wrapper" id="videoWrapper">
+        <video id="videoPlayer" controls></video>
+    </div>
+
+    <div class="audio-wrapper" id="audioWrapper">
+        <audio id="audioPlayer" controls></audio>
+    </div>
+
+    <div class="utility">
+        <div class="panel now-playing">
+            <h3>Now Playing</h3>
+            <div class="track-name" id="trackName">-</div>
+            <div class="track-time" id="trackTime">00:00 / 00:00</div>
+        </div>
+
+        <div class="panel speed">
+            <h3>Speed</h3>
+            <div class="speed-buttons">
+                <button data-speed="0.75">0.75×</button>
+                <button data-speed="1" class="active">1×</button>
+                <button data-speed="1.25">1.25×</button>
+                <button data-speed="1.5">1.5×</button>
+                <button data-speed="2">2×</button>
+            </div>
+        </div>
+
+        <div class="panel playlist">
+            <h3>Playlist</h3>
+            <ul id="playlist"></ul>
+        </div>
+    </div>
+
+    <div class="controls">
+        <div class="file-input">
+            <label for="mediaInput">MP4 / MP3 파일 선택</label>
+            <input type="file" id="mediaInput" multiple accept="video/mp4,audio/mp3">
+        </div>
+        <div class="hint">로컬 파일을 빠르고 간단하게 재생합니다</div>
+    </div>
+
+    <div class="footer">
+        Made by <span>Pichu Media</span>
+    </div>
+
+</div>
+
+<script>
+const input = document.getElementById("mediaInput");
+const video = document.getElementById("videoPlayer");
+const audio = document.getElementById("audioPlayer");
+const videoWrapper = document.getElementById("videoWrapper");
+const audioWrapper = document.getElementById("audioWrapper");
+const playlistEl = document.getElementById("playlist");
+const trackNameEl = document.getElementById("trackName");
+const trackTimeEl = document.getElementById("trackTime");
+const speedButtons = document.querySelectorAll(".speed-buttons button");
+
+let playlist = [];
+let currentIndex = -1;
+let currentMedia = null;
+
+function playIndex(index) {
+    const file = playlist[index];
+    if (!file) return;
+
+    currentIndex = index;
+    document.querySelectorAll(".playlist li").forEach((li, i) => {
+        li.classList.toggle("active", i === index);
+    });
+
+    const url = URL.createObjectURL(file);
+    trackNameEl.textContent = file.name;
+
+    if (file.type.startsWith("video")) {
+        audio.pause();
+        audioWrapper.style.display = "none";
+        videoWrapper.style.display = "block";
+        currentMedia = video;
+        video.src = url;
+        video.play();
+    } else {
+        video.pause();
+        videoWrapper.style.display = "none";
+        audioWrapper.style.display = "block";
+        currentMedia = audio;
+        audio.src = url;
+        audio.play();
+    }
+
+    setSpeed(document.querySelector(".speed-buttons .active").dataset.speed);
+}
+
+function setSpeed(speed) {
+    if (!currentMedia) return;
+    currentMedia.playbackRate = speed;
+    speedButtons.forEach(b => b.classList.remove("active"));
+    document.querySelector(`[data-speed="${speed}"]`).classList.add("active");
+}
+
+speedButtons.forEach(btn => {
+    btn.addEventListener("click", () => setSpeed(btn.dataset.speed));
+});
+
+function updateTime() {
+    if (!currentMedia) return;
+    const cur = Math.floor(currentMedia.currentTime);
+    const dur = Math.floor(currentMedia.duration || 0);
+    trackTimeEl.textContent =
+        `${String(Math.floor(cur/60)).padStart(2,'0')}:${String(cur%60).padStart(2,'0')} / ` +
+        `${String(Math.floor(dur/60)).padStart(2,'0')}:${String(dur%60).padStart(2,'0')}`;
+}
+
+setInterval(updateTime, 500);
+
+input.addEventListener("change", () => {
+    playlist = Array.from(input.files);
+    playlistEl.innerHTML = "";
+    playlist.forEach((file, i) => {
+        const li = document.createElement("li");
+        li.textContent = file.name;
+        li.addEventListener("click", () => playIndex(i));
+        playlistEl.appendChild(li);
+    });
+    if (playlist.length > 0) playIndex(0);
+});
+</script>
+
+</body>
+</html>
