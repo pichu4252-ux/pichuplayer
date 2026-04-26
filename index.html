@@ -5,8 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pichu Player 3.0</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;500&display=swap" rel="stylesheet">
 
 <style>
@@ -17,11 +16,12 @@
     --black: #000000;
     --white: #FFFFFF;
     --gray: #a0a4b8;
+    --danger: #ff4d4d;
 }
 
 * {
     box-sizing: border-box;
-    font-family: 'Noto Sans KR', sans-serif;
+    font-family: 'Pretendard', sans-serif;
     letter-spacing: -0.01em;
 }
 
@@ -46,7 +46,6 @@ body {
     border: 1px solid rgba(255,255,255,0.05);
 }
 
-/* --- 헤더 및 이미지 로고 디자인 수정 --- */
 .header {
     text-align: center;
     margin-bottom: 35px;
@@ -56,16 +55,13 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 15px; /* 로고와 제목 사이 간격 */
+    gap: 15px;
 }
 
-/* 이미지 로고 스타일 */
 .player-logo {
-    width: 80px; /* 플레이어에 맞게 적절한 크기로 조절 (원하시는 대로 변경 가능) */
-    height: 80px; /* 1:1 비율 유지 */
-    object-fit: contain; /* 이미지가 잘리지 않도록 */
-    /* 로고가 너무 부각되면 살짝 불투명도를 줍니다 */
-    /* opacity: 0.9; */
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
 }
 
 .header h1 {
@@ -82,15 +78,7 @@ body {
     color: var(--accent);
 }
 
-.header p {
-    margin: 8px 0 0;
-    color: var(--gray);
-    font-size: 0.9rem;
-    font-weight: 300;
-    letter-spacing: 2px;
-}
-
-/* --- 이하 컨트롤 및 플레이어 스타일은 동일 --- */
+/* 메인 버튼들 */
 .main-controls {
     display: flex;
     gap: 15px;
@@ -116,6 +104,7 @@ body {
     border-color: var(--accent);
 }
 
+/* 재생 옵션 바 */
 .playback-options {
     display: flex;
     justify-content: space-between;
@@ -153,24 +142,19 @@ body {
     gap: 12px;
 }
 
-.volume-box span { font-size: 1rem; opacity: 0.7; }
-
 input[type=range] {
     width: 100px;
     accent-color: var(--accent);
     cursor: pointer;
-    opacity: 0.8;
 }
 
+/* 플레이어 노출 영역 */
 .player-display {
     background: rgba(0,0,0,0.4);
     border-radius: 25px;
     overflow: hidden;
     margin-bottom: 25px;
-    min-height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    transition: all 0.5s ease;
 }
 
 video, audio {
@@ -178,37 +162,29 @@ video, audio {
     display: block;
 }
 
+/* 플레이리스트 */
 .playlist-container {
     background: rgba(255,255,255,0.02);
     border-radius: 25px;
     padding: 20px;
-    max-height: 250px;
+    max-height: 300px;
     overflow-y: auto;
 }
 
 .playlist-container::-webkit-scrollbar { width: 4px; }
 .playlist-container::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
 
-.playlist-container h3 {
-    margin: 0 0 15px;
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: var(--accent);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
 .item {
-    padding: 14px 20px;
+    padding: 12px 20px;
     border-radius: 50px;
-    margin-bottom: 5px;
+    margin-bottom: 6px;
     cursor: pointer;
-    font-size: 0.9rem;
-    font-weight: 100;
+    font-weight: 200; /* 프리텐다드 약간 얇게 */
     color: var(--gray);
     transition: all 0.2s ease;
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 .item:hover {
@@ -219,7 +195,41 @@ video, audio {
 .item.active {
     background: rgba(210, 158, 113, 0.1);
     color: var(--accent);
+    font-weight: 400;
+}
+
+.item-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+}
+
+/* 파일 형식 태그 (Noto Sans KR) */
+.file-type {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 0.65rem;
     font-weight: 500;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.1);
+    color: var(--gray);
+}
+
+/* 삭제 버튼 */
+.delete-btn {
+    background: none;
+    border: none;
+    color: var(--gray);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0 5px;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.delete-btn:hover {
+    color: var(--danger);
 }
 
 footer {
@@ -228,13 +238,11 @@ footer {
     font-size: 0.75rem;
     font-weight: 100;
     color: var(--gray);
-    letter-spacing: 1px;
 }
 
 @media (max-width: 600px) {
     .playback-options { flex-direction: column; gap: 15px; border-radius: 20px; }
     .header h1 { font-size: 1.6rem; }
-    .player-logo { width: 60px; height: 60px; } /* 모바일에선 로고를 조금 줄임 */
 }
 </style>
 </head>
@@ -245,13 +253,12 @@ footer {
         <div class="logo-container">
             <img src="logo.png" alt="Pichu Logo" class="player-logo">
             <h1>PICHU PLAYER <span>3.0</span></h1>
-            <p>SMARTER. BETTER. FANTASTIC.</p>
         </div>
     </div>
 
     <div class="main-controls">
         <button onclick="document.getElementById('fileInput').click()">📁 파일 추가</button>
-        <button onclick="clearPlaylist()">🗑️ 초기화</button>
+        <button onclick="clearPlaylist()">🗑️ 리스트 초기화</button>
     </div>
 
     <div class="playback-options">
@@ -260,39 +267,36 @@ footer {
             <button id="btnRepeat" class="option-btn" onclick="toggleRepeat()">➡️ 반복 OFF</button>
         </div>
         <div class="volume-box">
-            <span>Vol</span>
+            <span style="font-size:0.8rem; opacity:0.5;">VOL</span>
             <input type="range" id="volRange" min="0" max="1" step="0.01" value="1">
         </div>
     </div>
 
-    <div class="player-display">
+    <div class="player-display" id="playerDisplay" style="display:none;">
         <input type="file" id="fileInput" accept="audio/*,video/*" multiple hidden>
-        <audio id="audio" controls hidden></audio>
-        <video id="video" controls hidden></video>
+        <audio id="audio" controls></audio>
+        <video id="video" controls></video>
     </div>
 
     <div class="playlist-container">
-        <h3>Playlist</h3>
         <div id="list"></div>
     </div>
 
-    <footer>
-        DESIGNED BY PICHU MEDIA
-    </footer>
+    <footer>DESIGNED BY PICHU MEDIA</footer>
 </div>
 
 <script>
-// 자바스크립트 코드는 이전과 동일합니다.
 const fileInput = document.getElementById('fileInput');
 const audio = document.getElementById('audio');
 const video = document.getElementById('video');
 const listDiv = document.getElementById('list');
 const volRange = document.getElementById('volRange');
+const playerDisplay = document.getElementById('playerDisplay');
 
 let playlist = [];
 let currentIndex = -1;
 let isShuffle = false;
-let repeatMode = 0; // 0: OFF, 1: ALL, 2: ONE
+let repeatMode = 0; 
 
 fileInput.addEventListener('change', () => {
     for (const file of fileInput.files) {
@@ -303,11 +307,24 @@ fileInput.addEventListener('change', () => {
 
 function render() {
     listDiv.innerHTML = "";
+    if (playlist.length === 0) {
+        playerDisplay.style.display = "none";
+    }
+    
     playlist.forEach((file, i) => {
+        const isVideo = file.type.startsWith('video');
+        const typeLabel = isVideo ? 'MP4' : 'MP3';
+        
         const div = document.createElement('div');
         div.className = `item ${i === currentIndex ? 'active' : ''}`;
-        div.innerHTML = `<span>${i + 1}. ${file.name}</span>`;
-        div.onclick = () => play(i);
+        
+        div.innerHTML = `
+            <div class="item-info" onclick="play(${i})">
+                <span class="file-type">${typeLabel}</span>
+                <span>${file.name}</span>
+            </div>
+            <button class="delete-btn" onclick="deleteItem(event, ${i})">&times;</button>
+        `;
         listDiv.appendChild(div);
     });
 }
@@ -318,17 +335,36 @@ function play(i) {
     const file = playlist[i];
     const url = URL.createObjectURL(file);
     
+    playerDisplay.style.display = "block";
     const currentVol = volRange.value;
-    audio.volume = currentVol;
-    video.volume = currentVol;
 
     if (file.type.startsWith('audio')) {
-        video.pause(); video.hidden = true;
-        audio.hidden = false; audio.src = url; audio.play();
+        video.pause(); video.style.display = "none";
+        audio.style.display = "block";
+        audio.src = url; audio.volume = currentVol; audio.play();
     } else {
-        audio.pause(); audio.hidden = true;
-        video.hidden = false; video.src = url; video.play();
+        audio.pause(); audio.style.display = "none";
+        video.style.display = "block";
+        video.src = url; video.volume = currentVol; video.play();
     }
+    render();
+}
+
+// 특정 노래 삭제 기능
+function deleteItem(event, index) {
+    event.stopPropagation(); // 부모 클릭 이벤트(재생) 방지
+    
+    if (index === currentIndex) {
+        audio.pause();
+        video.pause();
+        audio.src = "";
+        video.src = "";
+        currentIndex = -1;
+    } else if (index < currentIndex) {
+        currentIndex--; // 현재 재생 중인 인덱스 유지
+    }
+    
+    playlist.splice(index, 1);
     render();
 }
 
@@ -374,6 +410,7 @@ function toggleRepeat() {
 
 function clearPlaylist() {
     audio.pause(); video.pause();
+    audio.src = ""; video.src = "";
     playlist = []; currentIndex = -1;
     render();
 }
