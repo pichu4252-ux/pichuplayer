@@ -2,349 +2,381 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>Pichu Player 2.0</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pichu Player 3.0</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;500&display=swap" rel="stylesheet">
 
 <style>
 :root {
     --bg-main: #070c23;
-    --bg-sub: #1f3597;
+    --bg-sub: #121a3d;
     --accent: #d29e71;
     --black: #000000;
     --white: #FFFFFF;
-    --text-sub: #cfd6ff;
+    --gray: #a0a4b8;
 }
 
 * {
     box-sizing: border-box;
+    font-family: 'Noto Sans KR', sans-serif;
+    letter-spacing: -0.01em;
 }
 
 body {
     margin: 0;
-    font-family: "Segoe UI", Arial, sans-serif;
-    background: linear-gradient(160deg, var(--bg-main), #050814);
+    background: var(--bg-main);
     color: var(--white);
-    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
+    min-height: 100vh;
+    padding: 20px;
 }
 
-.player {
-    width: 920px;
-    max-width: 95%;
-    background: linear-gradient(180deg, var(--bg-main), #0b1238);
-    border-radius: 18px;
-    padding: 28px;
-    box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+.app {
+    width: 850px;
+    max-width: 100%;
+    background: linear-gradient(145deg, var(--bg-main), var(--bg-sub));
+    border-radius: 40px;
+    padding: 40px;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+    border: 1px solid rgba(255,255,255,0.05);
 }
 
-.title {
+/* --- 헤더 및 이미지 로고 디자인 수정 --- */
+.header {
     text-align: center;
-    font-size: 30px;
-    font-weight: 700;
+    margin-bottom: 35px;
 }
 
-.title span {
-    color: var(--accent);
+.logo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px; /* 로고와 제목 사이 간격 */
 }
 
-.subtitle {
-    text-align: center;
-    font-size: 15px;
-    color: var(--text-sub);
-    margin-bottom: 26px;
-    letter-spacing: 1px;
+/* 이미지 로고 스타일 */
+.player-logo {
+    width: 80px; /* 플레이어에 맞게 적절한 크기로 조절 (원하시는 대로 변경 가능) */
+    height: 80px; /* 1:1 비율 유지 */
+    object-fit: contain; /* 이미지가 잘리지 않도록 */
+    /* 로고가 너무 부각되면 살짝 불투명도를 줍니다 */
+    /* opacity: 0.9; */
 }
 
-/* Media */
-.video-wrapper {
-    display: none;
-    border-radius: 14px;
-    overflow: hidden;
-    border: 2px solid rgba(31,53,151,0.6);
-    margin-bottom: 18px;
-}
-
-video {
-    width: 100%;
-    background: var(--black);
-}
-
-.audio-wrapper {
-    display: none;
-    margin-bottom: 18px;
-}
-
-audio {
-    width: 100%;
-}
-
-/* Utility Panel */
-.utility {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-}
-
-.panel {
-    background: linear-gradient(160deg, #0b1340, var(--bg-main));
-    border: 1px solid rgba(31,53,151,0.4);
-    border-radius: 14px;
-    padding: 16px;
-}
-
-/* Now Playing */
-.now-playing h3 {
-    margin: 0 0 8px;
-    font-size: 15px;
-    color: var(--accent);
-}
-
-.track-name {
-    font-size: 14px;
-    margin-bottom: 6px;
-    word-break: break-all;
-}
-
-.track-time {
-    font-size: 13px;
-    color: var(--text-sub);
-}
-
-/* Speed */
-.speed h3 {
-    margin: 0 0 10px;
-    font-size: 15px;
-    color: var(--accent);
-}
-
-.speed-buttons button {
-    margin: 4px;
-    padding: 6px 12px;
-    border-radius: 20px;
-    border: none;
-    background: var(--bg-sub);
-    color: var(--white);
-    cursor: pointer;
-    font-size: 13px;
-}
-
-.speed-buttons button.active {
-    background: var(--accent);
-    color: var(--black);
-}
-
-/* Playlist */
-.playlist {
-    grid-column: 1 / -1;
-}
-
-.playlist h3 {
-    margin: 0 0 10px;
-    font-size: 15px;
-    color: var(--accent);
-}
-
-.playlist ul {
-    list-style: none;
-    padding: 0;
+.header h1 {
     margin: 0;
-    max-height: 160px;
-    overflow-y: auto;
-}
-
-.playlist li {
-    padding: 8px 10px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 14px;
+    font-size: 2.2rem;
+    font-weight: 100;
+    letter-spacing: 4px;
     color: var(--white);
+    text-transform: uppercase;
 }
 
-.playlist li:hover {
-    background: rgba(255,255,255,0.08);
+.header h1 span {
+    font-weight: 500;
+    color: var(--accent);
 }
 
-.playlist li.active {
+.header p {
+    margin: 8px 0 0;
+    color: var(--gray);
+    font-size: 0.9rem;
+    font-weight: 300;
+    letter-spacing: 2px;
+}
+
+/* --- 이하 컨트롤 및 플레이어 스타일은 동일 --- */
+.main-controls {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.main-controls button {
+    flex: 1;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--white);
+    padding: 15px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 300;
+    transition: all 0.3s ease;
+}
+
+.main-controls button:hover {
     background: var(--accent);
     color: var(--black);
-    font-weight: 600;
+    border-color: var(--accent);
 }
 
-/* Controls */
-.controls {
-    margin-top: 20px;
+.playback-options {
     display: flex;
     justify-content: space-between;
-    flex-wrap: wrap;
+    align-items: center;
+    background: rgba(0,0,0,0.25);
+    padding: 15px 25px;
+    border-radius: 50px;
+    margin-bottom: 25px;
+}
+
+.btn-group {
+    display: flex;
+    gap: 10px;
+}
+
+.option-btn {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: var(--gray);
+    padding: 8px 16px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+}
+
+.option-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.volume-box {
+    display: flex;
+    align-items: center;
     gap: 12px;
 }
 
-.file-input input {
-    display: none;
+.volume-box span { font-size: 1rem; opacity: 0.7; }
+
+input[type=range] {
+    width: 100px;
+    accent-color: var(--accent);
+    cursor: pointer;
+    opacity: 0.8;
 }
 
-.file-input label {
-    background: linear-gradient(135deg, var(--bg-sub), #2948d4);
-    padding: 12px 22px;
-    border-radius: 30px;
+.player-display {
+    background: rgba(0,0,0,0.4);
+    border-radius: 25px;
+    overflow: hidden;
+    margin-bottom: 25px;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+video, audio {
+    width: 100%;
+    display: block;
+}
+
+.playlist-container {
+    background: rgba(255,255,255,0.02);
+    border-radius: 25px;
+    padding: 20px;
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.playlist-container::-webkit-scrollbar { width: 4px; }
+.playlist-container::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+
+.playlist-container h3 {
+    margin: 0 0 15px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.item {
+    padding: 14px 20px;
+    border-radius: 50px;
+    margin-bottom: 5px;
     cursor: pointer;
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 0.9rem;
+    font-weight: 100;
+    color: var(--gray);
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: space-between;
+}
+
+.item:hover {
+    background: rgba(255,255,255,0.05);
     color: var(--white);
 }
 
-.hint {
-    font-size: 13px;
-    color: var(--text-sub);
-}
-
-.footer {
-    margin-top: 22px;
-    text-align: center;
-    font-size: 13px;
-    color: var(--text-sub);
-}
-
-.footer span {
+.item.active {
+    background: rgba(210, 158, 113, 0.1);
     color: var(--accent);
-    font-weight: 600;
+    font-weight: 500;
+}
+
+footer {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 100;
+    color: var(--gray);
+    letter-spacing: 1px;
+}
+
+@media (max-width: 600px) {
+    .playback-options { flex-direction: column; gap: 15px; border-radius: 20px; }
+    .header h1 { font-size: 1.6rem; }
+    .player-logo { width: 60px; height: 60px; } /* 모바일에선 로고를 조금 줄임 */
 }
 </style>
 </head>
 <body>
 
-<div class="player">
-
-    <div class="title">Pichu Player <span>2.0</span></div>
-    <div class="subtitle">Fast. Fantastic</div>
-
-    <div class="video-wrapper" id="videoWrapper">
-        <video id="videoPlayer" controls></video>
-    </div>
-
-    <div class="audio-wrapper" id="audioWrapper">
-        <audio id="audioPlayer" controls></audio>
-    </div>
-
-    <div class="utility">
-        <div class="panel now-playing">
-            <h3>Now Playing</h3>
-            <div class="track-name" id="trackName">-</div>
-            <div class="track-time" id="trackTime">00:00 / 00:00</div>
-        </div>
-
-        <div class="panel speed">
-            <h3>Speed</h3>
-            <div class="speed-buttons">
-                <button data-speed="0.75">0.75×</button>
-                <button data-speed="1" class="active">1×</button>
-                <button data-speed="1.25">1.25×</button>
-                <button data-speed="1.5">1.5×</button>
-                <button data-speed="2">2×</button>
-            </div>
-        </div>
-
-        <div class="panel playlist">
-            <h3>Playlist</h3>
-            <ul id="playlist"></ul>
+<div class="app">
+    <div class="header">
+        <div class="logo-container">
+            <img src="logo.png" alt="Pichu Logo" class="player-logo">
+            <h1>PICHU PLAYER <span>3.0</span></h1>
+            <p>SMARTER. BETTER. FANTASTIC.</p>
         </div>
     </div>
 
-    <div class="controls">
-        <div class="file-input">
-            <label for="mediaInput">MP4 / MP3 파일 선택</label>
-            <input type="file" id="mediaInput" multiple accept="video/mp4,audio/mp3">
+    <div class="main-controls">
+        <button onclick="document.getElementById('fileInput').click()">📁 파일 추가</button>
+        <button onclick="clearPlaylist()">🗑️ 초기화</button>
+    </div>
+
+    <div class="playback-options">
+        <div class="btn-group">
+            <button id="btnShuffle" class="option-btn" onclick="toggleShuffle()">🔀 셔플 OFF</button>
+            <button id="btnRepeat" class="option-btn" onclick="toggleRepeat()">➡️ 반복 OFF</button>
         </div>
-        <div class="hint">로컬 파일을 빠르고 간단하게 재생합니다</div>
+        <div class="volume-box">
+            <span>Vol</span>
+            <input type="range" id="volRange" min="0" max="1" step="0.01" value="1">
+        </div>
     </div>
 
-    <div class="footer">
-        Made by <span>Pichu Media</span>
+    <div class="player-display">
+        <input type="file" id="fileInput" accept="audio/*,video/*" multiple hidden>
+        <audio id="audio" controls hidden></audio>
+        <video id="video" controls hidden></video>
     </div>
 
+    <div class="playlist-container">
+        <h3>Playlist</h3>
+        <div id="list"></div>
+    </div>
+
+    <footer>
+        DESIGNED BY PICHU MEDIA
+    </footer>
 </div>
 
 <script>
-const input = document.getElementById("mediaInput");
-const video = document.getElementById("videoPlayer");
-const audio = document.getElementById("audioPlayer");
-const videoWrapper = document.getElementById("videoWrapper");
-const audioWrapper = document.getElementById("audioWrapper");
-const playlistEl = document.getElementById("playlist");
-const trackNameEl = document.getElementById("trackName");
-const trackTimeEl = document.getElementById("trackTime");
-const speedButtons = document.querySelectorAll(".speed-buttons button");
+// 자바스크립트 코드는 이전과 동일합니다.
+const fileInput = document.getElementById('fileInput');
+const audio = document.getElementById('audio');
+const video = document.getElementById('video');
+const listDiv = document.getElementById('list');
+const volRange = document.getElementById('volRange');
 
 let playlist = [];
 let currentIndex = -1;
-let currentMedia = null;
+let isShuffle = false;
+let repeatMode = 0; // 0: OFF, 1: ALL, 2: ONE
 
-function playIndex(index) {
-    const file = playlist[index];
-    if (!file) return;
-
-    currentIndex = index;
-    document.querySelectorAll(".playlist li").forEach((li, i) => {
-        li.classList.toggle("active", i === index);
-    });
-
-    const url = URL.createObjectURL(file);
-    trackNameEl.textContent = file.name;
-
-    if (file.type.startsWith("video")) {
-        audio.pause();
-        audioWrapper.style.display = "none";
-        videoWrapper.style.display = "block";
-        currentMedia = video;
-        video.src = url;
-        video.play();
-    } else {
-        video.pause();
-        videoWrapper.style.display = "none";
-        audioWrapper.style.display = "block";
-        currentMedia = audio;
-        audio.src = url;
-        audio.play();
+fileInput.addEventListener('change', () => {
+    for (const file of fileInput.files) {
+        playlist.push(file);
     }
-
-    setSpeed(document.querySelector(".speed-buttons .active").dataset.speed);
-}
-
-function setSpeed(speed) {
-    if (!currentMedia) return;
-    currentMedia.playbackRate = speed;
-    speedButtons.forEach(b => b.classList.remove("active"));
-    document.querySelector(`[data-speed="${speed}"]`).classList.add("active");
-}
-
-speedButtons.forEach(btn => {
-    btn.addEventListener("click", () => setSpeed(btn.dataset.speed));
+    render();
 });
 
-function updateTime() {
-    if (!currentMedia) return;
-    const cur = Math.floor(currentMedia.currentTime);
-    const dur = Math.floor(currentMedia.duration || 0);
-    trackTimeEl.textContent =
-        `${String(Math.floor(cur/60)).padStart(2,'0')}:${String(cur%60).padStart(2,'0')} / ` +
-        `${String(Math.floor(dur/60)).padStart(2,'0')}:${String(dur%60).padStart(2,'0')}`;
-}
-
-setInterval(updateTime, 500);
-
-input.addEventListener("change", () => {
-    playlist = Array.from(input.files);
-    playlistEl.innerHTML = "";
+function render() {
+    listDiv.innerHTML = "";
     playlist.forEach((file, i) => {
-        const li = document.createElement("li");
-        li.textContent = file.name;
-        li.addEventListener("click", () => playIndex(i));
-        playlistEl.appendChild(li);
+        const div = document.createElement('div');
+        div.className = `item ${i === currentIndex ? 'active' : ''}`;
+        div.innerHTML = `<span>${i + 1}. ${file.name}</span>`;
+        div.onclick = () => play(i);
+        listDiv.appendChild(div);
     });
-    if (playlist.length > 0) playIndex(0);
-});
-</script>
+}
 
+function play(i) {
+    if (i < 0 || i >= playlist.length) return;
+    currentIndex = i;
+    const file = playlist[i];
+    const url = URL.createObjectURL(file);
+    
+    const currentVol = volRange.value;
+    audio.volume = currentVol;
+    video.volume = currentVol;
+
+    if (file.type.startsWith('audio')) {
+        video.pause(); video.hidden = true;
+        audio.hidden = false; audio.src = url; audio.play();
+    } else {
+        audio.pause(); audio.hidden = true;
+        video.hidden = false; video.src = url; video.play();
+    }
+    render();
+}
+
+function next() {
+    if (playlist.length === 0) return;
+    if (repeatMode === 2) { play(currentIndex); return; }
+    
+    let n = currentIndex + 1;
+    if (isShuffle) {
+        n = Math.floor(Math.random() * playlist.length);
+        if (n === currentIndex && playlist.length > 1) n = (n + 1) % playlist.length;
+    } else {
+        if (n >= playlist.length) {
+            if (repeatMode === 1) n = 0;
+            else return;
+        }
+    }
+    play(n);
+}
+
+audio.onended = next;
+video.onended = next;
+
+volRange.oninput = (e) => {
+    audio.volume = e.target.value;
+    video.volume = e.target.value;
+};
+
+function toggleShuffle() {
+    isShuffle = !isShuffle;
+    const btn = document.getElementById('btnShuffle');
+    btn.textContent = isShuffle ? "🔀 셔플 ON" : "🔀 셔플 OFF";
+    btn.classList.toggle('active', isShuffle);
+}
+
+function toggleRepeat() {
+    repeatMode = (repeatMode + 1) % 3;
+    const btn = document.getElementById('btnRepeat');
+    const labels = ["➡️ 반복 OFF", "🔁 전체 반복", "🔂 한 곡 반복"];
+    btn.textContent = labels[repeatMode];
+    btn.classList.toggle('active', repeatMode !== 0);
+}
+
+function clearPlaylist() {
+    audio.pause(); video.pause();
+    playlist = []; currentIndex = -1;
+    render();
+}
+</script>
 </body>
 </html>
