@@ -3,9 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pichu Player 3.1</title>
+<title>Pichu Player 3.2</title>
 
-<!-- 글씨체 유지 (Pretendard & Noto Sans KR) -->
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;500&display=swap" rel="stylesheet">
 
@@ -20,6 +19,16 @@
     --glass-bg: rgba(255, 255, 255, 0.45);
     --glass-border: rgba(255, 255, 255, 0.6);
     --danger: #ff4d4d;
+    
+    /* 홀로그램 공통 그라데이션 */
+    --hologram-gradient: linear-gradient(
+        120deg, 
+        #a1c4fd 0%, 
+        #c2e9fb 25%, 
+        #d29e71 50%, 
+        #fbc2eb 75%, 
+        #a1c4fd 100%
+    );
 }
 
 * {
@@ -83,9 +92,22 @@ body {
     text-transform: uppercase;
 }
 
+/* 버전 정보(3.2) 홀로그램 효과 */
 .header h1 span {
     font-weight: 500;
-    color: var(--accent);
+    background: var(--hologram-gradient);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: hologramMove 6s linear infinite;
+}
+
+/* 홀로그램 이동 애니메이션 */
+@keyframes hologramMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 .main-controls {
@@ -146,10 +168,14 @@ body {
     transition: all 0.2s ease;
 }
 
+/* 토글 활성화 버튼 홀로그램 */
 .option-btn.active {
-    background: var(--accent);
+    background: var(--hologram-gradient);
+    background-size: 200% auto;
     color: #ffffff;
-    border-color: var(--accent);
+    border-color: transparent;
+    animation: hologramMove 6s linear infinite;
+    box-shadow: 0 4px 15px rgba(161, 196, 253, 0.3);
 }
 
 .slider-box {
@@ -173,10 +199,90 @@ body {
     text-align: right;
 }
 
+/* ✨ 슬라이더 베이스 및 기본 선(트랙) 자체에 홀로그램 효과 적용 */
 input[type=range] {
     width: 100px;
-    accent-color: var(--accent);
     cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    height: 6px;
+    border-radius: 5px;
+    outline: none;
+    
+    /* 슬라이더 선 배경을 홀로그램 그라데이션으로 변경 */
+    background: var(--hologram-gradient);
+    background-size: 200% auto;
+    animation: hologramMove 6s linear infinite;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+}
+
+/* 크롬/사파리 슬라이더 핸들(손잡이) */
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--hologram-gradient);
+    background-size: 200% auto;
+    animation: hologramMove 6s linear infinite;
+    border: 2px solid #ffffff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    transition: transform 0.1s;
+}
+
+input[type=range]::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+}
+
+/* 파이어폭스 슬라이더 핸들 */
+input[type=range]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--hologram-gradient);
+    background-size: 200% auto;
+    animation: hologramMove 6s linear infinite;
+    border: 2px solid #ffffff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    transition: transform 0.1s;
+}
+input[type=range]::-moz-range-thumb:hover {
+    transform: scale(1.2);
+}
+
+/* 파이어폭스 트랙 홀로그램 보정 */
+input[type=range]::-moz-range-track {
+    background: var(--hologram-gradient);
+    background-size: 200% auto;
+    animation: hologramMove 6s linear infinite;
+    height: 6px;
+    border-radius: 5px;
+}
+
+.info-board {
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
+}
+
+.info-title {
+    font-size: 1.15rem;
+    font-weight: 500;
+    color: var(--text-main);
+    margin-bottom: 8px;
+    word-break: break-all;
+}
+
+.info-time {
+    font-size: 0.9rem;
+    font-weight: 300;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
 }
 
 .player-display {
@@ -185,7 +291,35 @@ input[type=range] {
     border-radius: 25px;
     overflow: hidden;
     margin-bottom: 25px;
-    transition: all 0.4s ease;
+    position: relative;
+}
+
+.nav-controls {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.3);
+    border-top: 1px solid rgba(0,0,0,0.03);
+}
+
+.nav-btn {
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    color: var(--text-main);
+    padding: 10px 25px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 400;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+    transition: all 0.2s;
+}
+
+.nav-btn:hover {
+    background: var(--text-main);
+    color: white;
+    transform: scale(1.03);
 }
 
 video, audio {
@@ -195,6 +329,7 @@ video, audio {
 
 video {
     background: #000000;
+    max-height: 400px;
 }
 
 .playlist-container {
@@ -287,8 +422,7 @@ footer {
     <div class="header">
         <div class="logo-container">
             <img src="logo.png" alt="Pichu Logo" class="player-logo">
-            <!-- 버전 정보 3.1로 업데이트 완료 -->
-            <h1>PICHU PLAYER <span>3.1</span></h1>
+            <h1>PICHU PLAYER <span>3.2</span></h1>
         </div>
     </div>
 
@@ -315,10 +449,20 @@ footer {
         </div>
     </div>
 
+    <div class="info-board" id="infoBoard" style="display: none;">
+        <div class="info-title" id="infoTitle">재생 중인 파일이 없습니다.</div>
+        <div class="info-time" id="infoTime">00:00 / 00:00</div>
+    </div>
+
     <div class="player-display" id="playerDisplay" style="display:none;">
         <input type="file" id="fileInput" accept="audio/*,video/*" multiple hidden>
         <audio id="audio" controls></audio>
         <video id="video" controls></video>
+        
+        <div class="nav-controls">
+            <button class="nav-btn" onclick="prev()">⏮️ 이전 곡</button>
+            <button class="nav-btn" onclick="next()">⏭️ 다음 곡</button>
+        </div>
     </div>
 
     <div class="playlist-container">
@@ -338,6 +482,10 @@ const spdRange = document.getElementById('spdRange');
 const spdTxt = document.getElementById('spdTxt');
 const playerDisplay = document.getElementById('playerDisplay');
 
+const infoBoard = document.getElementById('infoBoard');
+const infoTitle = document.getElementById('infoTitle');
+const infoTime = document.getElementById('infoTime');
+
 let playlist = [];
 let currentIndex = -1;
 let isShuffle = false;
@@ -355,11 +503,16 @@ function render() {
     listDiv.innerHTML = "";
     if (playlist.length === 0) {
         playerDisplay.style.display = "none";
+        infoBoard.style.display = "none";
     }
     
     playlist.forEach((file, i) => {
         const isVideo = file.type.startsWith('video');
-        const typeLabel = isVideo ? 'MP4' : 'MP3';
+        
+        let typeLabel = isVideo ? 'MP4' : 'MP3';
+        if (!isVideo && (file.name.toLowerCase().endsWith('.m4a') || file.type.includes('m4a'))) {
+            typeLabel = 'M4A';
+        }
         
         const div = document.createElement('div');
         div.className = `item ${i === currentIndex ? 'active' : ''}`;
@@ -375,6 +528,22 @@ function render() {
     });
 }
 
+function cleanFileName(name) {
+    return name.substring(0, name.lastIndexOf('.')) || name;
+}
+
+function formatTime(secs) {
+    if (isNaN(secs)) return "00:00";
+    const m = Math.floor(secs / 60).toString().padStart(2, '0');
+    const s = Math.floor(secs % 60).toString().padStart(2, '0');
+    return `${m}:${s}`;
+}
+
+function updateTimer() {
+    const media = audio.style.display === "block" ? audio : video;
+    infoTime.textContent = `${formatTime(media.currentTime)} / ${formatTime(media.duration)}`;
+}
+
 function play(i) {
     if (i < 0 || i >= playlist.length) return;
     currentIndex = i;
@@ -382,9 +551,12 @@ function play(i) {
     const url = URL.createObjectURL(file);
     
     playerDisplay.style.display = "block";
+    infoBoard.style.display = "block";
+    infoTitle.textContent = cleanFileName(file.name);
+    
     const currentVol = volRange.value;
 
-    if (file.type.startsWith('audio')) {
+    if (file.type.startsWith('audio') || file.name.toLowerCase().endsWith('.m4a')) {
         video.pause(); video.style.display = "none";
         audio.style.display = "block";
         audio.src = url; 
@@ -401,6 +573,11 @@ function play(i) {
     }
     render();
 }
+
+audio.ontimeupdate = updateTimer;
+video.ontimeupdate = updateTimer;
+audio.onloadedmetadata = updateTimer;
+video.onloadedmetadata = updateTimer;
 
 spdRange.oninput = (e) => {
     const speed = parseFloat(e.target.value);
@@ -423,6 +600,15 @@ function deleteItem(event, index) {
     
     playlist.splice(index, 1);
     render();
+}
+
+function prev() {
+    if (playlist.length === 0) return;
+    let n = currentIndex - 1;
+    if (n < 0) {
+        n = playlist.length - 1;
+    }
+    play(n);
 }
 
 function next() {
